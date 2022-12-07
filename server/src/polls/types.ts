@@ -1,4 +1,5 @@
-/* eslint-disable prettier/prettier */
+import { Response } from 'express';
+import { type } from 'os';
 // service types
 export type CreatePollFields = {
   topic: string;
@@ -30,3 +31,13 @@ export type AddParticipantData = {
   userID: string;
   name: string;
 };
+
+// guard types
+
+type AuthPayload = {
+  userID: string;
+  pollID: string;
+  name: string;
+};
+
+export type RequestWithAuth = Request & AuthPayload;
