@@ -1,5 +1,3 @@
-import { Response } from 'express';
-import { type } from 'os';
 // service types
 export type CreatePollFields = {
   topic: string;
