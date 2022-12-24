@@ -3,7 +3,7 @@ import { Poll } from 'shared/poll-types';
 import { makeRequest } from '../api';
 import { actions, AppPage } from '../state';
 
-const Create: React.FC = () => {
+const Join: React.FC = () => {
   const [pollID, setPollID] = useState('');
   const [name, setName] = useState('');
   const [apiError, setApiError] = useState('');
@@ -27,7 +27,7 @@ const Create: React.FC = () => {
     const { data, error } = await makeRequest<{
       poll: Poll;
       accessToken: string;
-    }>('/poll/join', {
+    }>('/polls/join', {
       method: 'POST',
       body: JSON.stringify({
         pollID,
@@ -39,7 +39,7 @@ const Create: React.FC = () => {
       setApiError('Please make sure to include a poll topic!');
     } else if (error && !error.statusCode) {
       setApiError('Unknown API error');
-    } else  {
+    } else {
       actions.initializePoll(data.poll);
       actions.setPollAccessToken(data.accessToken);
       actions.setPage(AppPage.WaitingRoom);
@@ -101,4 +101,4 @@ const Create: React.FC = () => {
   );
 };
 
-export default Create;
+export default Join;
