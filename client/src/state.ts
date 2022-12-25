@@ -99,8 +99,6 @@ const actions = {
 subscribeKey(state, 'accessToken', () => {
   if (state.accessToken && state.poll) {
     localStorage.setItem('accessToken', state.accessToken);
-  } else {
-    localStorage.removeItem('accessToken');
   }
 });
 
