@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSnapshot } from 'valtio';
 import { devtools } from 'valtio/utils';
 import Loader from './components/ui/Loader';
+import SnackBar from './components/ui/SnackBar';
 
 import './index.css';
 import Pages from './Pages';
@@ -38,10 +39,20 @@ const App: React.FC = () => {
     actions.initializeSocket();
   }, []);
 
-  <Pages />;
   return (
     <>
       <Loader isLoading={currentState.isLoading} color="orange" width={120} />
+      {currentState.wsErrors.map((error) => (
+        <SnackBar
+          key={error.id}
+          type="error"
+          title={error.type}
+          message={error.message}
+          show={true}
+          onClose={() => actions.removeWsError(error.id)}
+          autoCloseDuration={5000}
+        />
+      ))}
       <Pages />
     </>
   );
