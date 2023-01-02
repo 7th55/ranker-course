@@ -7,12 +7,14 @@ import Join from './pages/Join';
 import { actions, AppPage, state } from './state';
 import { useSnapshot } from 'valtio';
 import { WaitingRoom } from './pages/WaitingRoom';
+import { Voting } from './pages/Voting';
 
 const routeConfig = {
   [AppPage.Welcome]: Welcome,
   [AppPage.Create]: Create,
   [AppPage.Join]: Join,
   [AppPage.WaitingRoom]: WaitingRoom,
+  [AppPage.Voting]: Voting,
 };
 
 const Pages: React.FC = () => {
@@ -26,6 +28,11 @@ const Pages: React.FC = () => {
     ) {
       actions.setPage(AppPage.WaitingRoom);
     }
+
+    if (currentState.me?.id && currentState.poll?.hasStarted) {
+      actions.setPage(AppPage.Voting);
+    }
+    
   }, [currentState.me?.id && !currentState.poll?.hasStarted]);
 
   return (

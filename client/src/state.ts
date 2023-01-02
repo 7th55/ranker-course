@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { Poll } from 'shared/poll-types';
 import { Socket } from 'socket.io-client';
 import { proxy, ref } from 'valtio';
-import { derive, subscribeKey } from 'valtio/utils';
+import { subscribeKey } from 'valtio/utils';
 import { createSocketWithHandlers, socketIOUrl } from './socket-io';
 import { getTokenPayload } from './util';
 
@@ -11,6 +11,7 @@ export enum AppPage {
   Create = 'create',
   Join = 'join',
   WaitingRoom = 'waiting-room',
+  Voting = 'voting',
 }
 
 type Me = {
@@ -77,7 +78,7 @@ const state = proxy<AppState>({
   get canStartVote() {
     const votesPerVoter = this.poll?.votesPerVoter ?? 100;
 
-    return this.nominationCount > votesPerVoter;
+    return this.nominationCount >= votesPerVoter;
   },
 });
 
@@ -106,9 +107,16 @@ const actions = {
           actions,
         })
       );
-    } else {
-      state.socket.connect();
+
+      return;
     }
+
+    if (!state.socket.connected) {
+      state.socket.connect();
+      return;
+    }
+
+    actions.stopLoading();
   },
   updatePoll: (poll: Poll): void => {
     state.poll = poll;
@@ -134,6 +142,15 @@ const actions = {
   },
   removeParticipant: (id: string): void => {
     state.socket?.emit('remove_participant', { id });
+  },
+  startVote: (): void => {
+    state.socket?.emit('start_vote');
+  },
+  submitRankings: (rankings: string[]): void => {
+    state.socket?.emit('submit_rankings', { rankings });
+  },
+  cancelPoll: (): void => {
+    state.socket?.emit('cancel_poll');
   },
   addWsError: (error: WsError): void => {
     state.wsErrors = [
