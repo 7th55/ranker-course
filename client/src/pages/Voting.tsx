@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import ConfirmationDialog from '../components/ui/ConfirmationDialog';
 import RankedCheckBox from '../components/ui/RankedCheckBox';
-import { state, acitons } from '../state';
+import { state, actions } from '../state';
 
 export const Voting: React.FC = () => {
   const currentState = useSnapshot(state);
@@ -76,7 +76,7 @@ export const Voting: React.FC = () => {
           message="You cannot change your vote after submitting"
           showDialog={confirmVotes}
           onCancel={() => setConfirmVotes(false)}
-          onConfirm={() => acitons.submitRankings(rankings)}
+          onConfirm={() => actions.submitRankings(rankings)}
         />
         {currentState.isAdmin && (
           <>
@@ -90,7 +90,7 @@ export const Voting: React.FC = () => {
               message="This will cancel the poll and remove all users"
               showDialog={confirmCancel}
               onCancel={() => setConfirmCancel(false)}
-              onConfirm={() => acitons.cancelPoll()}
+              onConfirm={() => actions.cancelPoll()}
             />
           </>
         )}
